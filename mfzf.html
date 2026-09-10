@@ -3,16 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>买房 vs 租房资产对比1.3</title>
 
+    <title>买房 vs 租房资产对比1.5</title>
+
+    <!-- Bootstrap 4.5.2 -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
 
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <!-- Vue 2.6.14 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
 
     <style>
         body {
             background: #f5f6f8;
+            color: #333;
         }
 
         .container {
@@ -21,17 +29,29 @@
 
         .card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
         }
 
         .card-header {
             font-size: 20px;
             font-weight: bold;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            border-radius: 12px 12px 0 0 !important;
+        }
+
+        .card-header i {
+            margin-right: 8px;
         }
 
         .form-group label {
             font-weight: 500;
+        }
+
+        .form-group label i {
+            width: 20px;
+            margin-right: 4px;
         }
 
         .result-box {
@@ -44,8 +64,9 @@
         .result-item {
             display: flex;
             justify-content: space-between;
-            padding: 7px 0;
-            border-bottom: 1px solid #eee;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
         }
 
         .result-item:last-child {
@@ -54,25 +75,42 @@
 
         .result-value {
             font-weight: bold;
+            text-align: right;
+            margin-left: 10px;
         }
 
         .total-asset {
             font-size: 20px;
-            font-weight: bold;
         }
 
         .compare-box {
-            margin-top: 25px;
-            padding: 20px;
-            border-radius: 10px;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            padding: 25px 20px;
+            border-radius: 12px;
             background: #fff;
-            box-shadow: 0 2px 10px rgba(0,0,0,.06);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, .06);
             text-align: center;
+        }
+
+        .compare-box h4 i {
+            margin-right: 6px;
         }
 
         .compare-value {
             font-size: 26px;
             font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .readonly-input {
+            background-color: #f8f9fa !important;
+        }
+
+        .small-note {
+            color: #888;
+            font-size: 12px;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -81,111 +119,161 @@
 
 <div id="app" class="container py-4">
 
-    <h2 class="text-center mb-4">买房 vs 租房资产对比</h2>
-
-    <!-- 公共参数 -->
-    <div class="card mb-4">
-        <div class="card-header">
-            公共参数
-        </div>
-
-        <div class="card-body">
-
-            <div class="form-row">
-
-                <div class="form-group col-md-4">
-                    <label>当前本金</label>
-                    <input type="number"
-                           class="form-control"
-                           v-model.number="currentPrincipal">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>多少年后（剩余资产）</label>
-                    <input type="number"
-                           class="form-control"
-                           v-model.number="compareYears">
-                </div>
-
-                <div class="form-group col-md-4">
-                    <label>存款利率（年）(%)</label>
-                    <input type="number"
-                           step="0.01"
-                           class="form-control"
-                           v-model.number="depositRate">
-                </div>
-
-            </div>
-
-        </div>
-    </div>
-
+    <h2 class="text-center mb-4">
+        <i class="fas fa-home"></i>
+        买房 vs 租房资产对比
+    </h2>
 
     <div class="row">
 
-        <!-- 买房 -->
+        <!-- =========================
+             左侧：买房
+             ========================= -->
         <div class="col-md-6 mb-4">
 
             <div class="card h-100">
 
                 <div class="card-header">
+                    <i class="fas fa-home"></i>
                     买房
                 </div>
 
                 <div class="card-body">
 
+                    <!-- 当前本金：联动参数 -->
                     <div class="form-group">
-                        <label>房屋单价（元/㎡）</label>
+                        <label>
+                            <i class="fas fa-wallet"></i>
+                            当前本金
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               v-model.number="currentPrincipal">
+                    </div>
+
+
+                    <!-- 存款利率：联动参数 -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-percentage"></i>
+                            存款利率（年）(%)
+                        </label>
+
+                        <input type="number"
+                               step="0.01"
+                               class="form-control"
+                               v-model.number="depositRate">
+                    </div>
+
+
+                    <!-- 房屋单价 -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-tag"></i>
+                            房屋单价（元/㎡）
+                        </label>
+
                         <input type="number"
                                class="form-control"
                                v-model.number="housePricePerSqm">
                     </div>
 
+
+                    <!-- 房屋面积 -->
                     <div class="form-group">
-                        <label>房屋面积（㎡）</label>
+                        <label>
+                            <i class="fas fa-ruler-combined"></i>
+                            房屋面积（㎡）
+                        </label>
+
                         <input type="number"
                                class="form-control"
                                v-model.number="houseArea">
                     </div>
 
+
+                    <!-- 房屋总价 -->
                     <div class="form-group">
-                        <label>房屋总价</label>
+                        <label>
+                            <i class="fas fa-calculator"></i>
+                            房屋总价
+                        </label>
+
                         <input type="text"
-                               class="form-control"
+                               class="form-control readonly-input"
                                :value="formatMoney(houseTotalPrice)"
                                readonly>
                     </div>
 
+
+                    <!-- 首付 -->
                     <div class="form-group">
-                        <label>首付金额</label>
+                        <label>
+                            <i class="fas fa-money-bill-wave"></i>
+                            首付金额
+                        </label>
+
                         <input type="number"
                                class="form-control"
                                v-model.number="downPayment">
                     </div>
 
+
+                    <!-- 装修：紧跟首付 -->
                     <div class="form-group">
-                        <label>贷款利率（年）(%)</label>
+                        <label>
+                            <i class="fas fa-paint-roller"></i>
+                            装修花费
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               v-model.number="decorationCost">
+                    </div>
+
+
+                    <!-- 贷款利率 -->
+                    <div class="form-group">
+                        <label>
+                            <i class="fas fa-percent"></i>
+                            贷款利率（年）(%)
+                        </label>
+
                         <input type="number"
                                step="0.01"
                                class="form-control"
                                v-model.number="loanRate">
                     </div>
 
+
+                    <!-- 贷款年限 -->
                     <div class="form-group">
-                        <label>贷款年限</label>
+                        <label>
+                            <i class="fas fa-calendar-alt"></i>
+                            贷款年限
+                        </label>
+
                         <input type="number"
                                class="form-control"
                                v-model.number="loanYears">
                     </div>
 
-                    <!-- 新增装修 -->
+
+                    <!-- 比较年限：联动 -->
                     <div class="form-group">
-                        <label>装修花费</label>
+                        <label>
+                            <i class="fas fa-hourglass-half"></i>
+                            多少年后（剩余资产）
+                        </label>
+
                         <input type="number"
                                class="form-control"
-                               v-model.number="decorationCost">
+                               v-model.number="compareYears">
                     </div>
 
+
+                    <!-- 买房结果 -->
                     <div class="result-box">
 
                         <div class="result-item">
@@ -235,21 +323,27 @@
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年存款利息</span>
+                            <span>
+                                {{ compareYears }}年存款利息
+                            </span>
                             <span class="result-value">
                                 {{ formatMoney(buyDepositInterest) }}
                             </span>
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年后剩余现金</span>
+                            <span>
+                                {{ compareYears }}年后剩余现金
+                            </span>
                             <span class="result-value">
                                 {{ formatMoney(buyRemainingAsset) }}
                             </span>
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年之后，剩余贷款</span>
+                            <span>
+                                {{ compareYears }}年之后，剩余贷款
+                            </span>
                             <span class="result-value">
                                 {{ formatMoney(remainingLoan) }}
                             </span>
@@ -265,7 +359,9 @@
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年之后，买房净资产</span>
+                            <span>
+                                {{ compareYears }}年之后，买房净资产
+                            </span>
                             <span class="result-value total-asset">
                                 {{ formatMoney(buyTotalAsset) }}
                             </span>
@@ -275,69 +371,104 @@
 
                 </div>
             </div>
+
         </div>
 
 
-        <!-- 租房 -->
+        <!-- =========================
+             右侧：租房
+             ========================= -->
         <div class="col-md-6 mb-4">
 
             <div class="card h-100">
 
                 <div class="card-header">
+                    <i class="fas fa-key"></i>
                     租房
                 </div>
 
                 <div class="card-body">
 
+                    <!-- 当前本金：联动 -->
                     <div class="form-group">
-                        <label>当前本金</label>
+                        <label>
+                            <i class="fas fa-wallet"></i>
+                            当前本金
+                        </label>
+
                         <input type="text"
-                               class="form-control"
+                               class="form-control readonly-input"
                                :value="formatMoney(currentPrincipal)"
                                readonly>
                     </div>
 
+
+                    <!-- 存款利率：联动 -->
                     <div class="form-group">
-                        <label>存款利率（年）(%)</label>
+                        <label>
+                            <i class="fas fa-percentage"></i>
+                            存款利率（年）(%)
+                        </label>
+
                         <input type="text"
-                               class="form-control"
+                               class="form-control readonly-input"
                                :value="depositRate"
                                readonly>
                     </div>
 
+
+                    <!-- 每月租金 -->
                     <div class="form-group">
-                        <label>每月租金</label>
+                        <label>
+                            <i class="fas fa-building"></i>
+                            每月租金
+                        </label>
+
                         <input type="number"
                                class="form-control"
                                v-model.number="monthlyRent">
                     </div>
 
+
+                    <!-- 比较年限：联动 -->
                     <div class="form-group">
-                        <label>多少年后（剩余资产）</label>
+                        <label>
+                            <i class="fas fa-hourglass-half"></i>
+                            多少年后（剩余资产）
+                        </label>
+
                         <input type="text"
-                               class="form-control"
+                               class="form-control readonly-input"
                                :value="compareYears"
                                readonly>
                     </div>
 
+
+                    <!-- 租房结果 -->
                     <div class="result-box">
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年累计租金</span>
+                            <span>
+                                {{ compareYears }}年累计租金
+                            </span>
                             <span class="result-value">
                                 {{ formatMoney(totalRent) }}
                             </span>
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年存款利息</span>
+                            <span>
+                                {{ compareYears }}年存款利息
+                            </span>
                             <span class="result-value">
                                 {{ formatMoney(rentDepositInterest) }}
                             </span>
                         </div>
 
                         <div class="result-item">
-                            <span>{{ compareYears }}年后剩余资产</span>
+                            <span>
+                                {{ compareYears }}年后剩余资产
+                            </span>
                             <span class="result-value total-asset">
                                 {{ formatMoney(rentRemainingAsset) }}
                             </span>
@@ -347,32 +478,50 @@
 
                 </div>
             </div>
+
         </div>
 
     </div>
 
 
-    <!-- 最终比较 -->
+    <!-- =========================
+         最终比较
+         ========================= -->
     <div class="compare-box">
 
-        <h4>{{ compareYears }}年后资产对比</h4>
+        <h4>
+            <i class="fas fa-balance-scale"></i>
+            {{ compareYears }}年后资产对比
+        </h4>
 
         <div class="mt-3">
 
             <div>
                 买房净资产：
-                <strong>{{ formatMoney(buyTotalAsset) }}</strong>
+                <strong>
+                    {{ formatMoney(buyTotalAsset) }}
+                </strong>
             </div>
 
-            <div>
+            <div class="mt-2">
                 租房剩余资产：
-                <strong>{{ formatMoney(rentRemainingAsset) }}</strong>
+                <strong>
+                    {{ formatMoney(rentRemainingAsset) }}
+                </strong>
             </div>
 
         </div>
 
-        <div class="compare-value mt-3">
-            {{ buyTotalAsset >= rentRemainingAsset ? '买房更高' : '租房更高' }}
+        <div class="compare-value">
+            <i class="fas"
+               :class="buyTotalAsset >= rentRemainingAsset
+                       ? 'fa-home'
+                       : 'fa-key'">
+            </i>
+
+            {{ buyTotalAsset >= rentRemainingAsset
+               ? '买房更高'
+               : '租房更高' }}
         </div>
 
         <div class="mt-2">
@@ -390,55 +539,83 @@
 <script>
 
 new Vue({
+
     el: '#app',
 
     data: {
 
-        /* 公共参数 */
+        /* =========================
+           联动参数
+           ========================= */
+
         currentPrincipal: 400000,
+
         compareYears: 20,
+
         depositRate: 2.0,
 
-        /* 买房 */
+
+        /* =========================
+           买房参数
+           ========================= */
+
         housePricePerSqm: 7000,
+
         houseArea: 80,
 
         downPayment: 168000,
 
-        loanRate: 3.1,
-        loanYears: 15,
-
-        /* 装修 */
         decorationCost: 100000,
 
-        /* 租房 */
+        loanRate: 3.1,
+
+        loanYears: 15,
+
+
+        /* =========================
+           租房参数
+           ========================= */
+
         monthlyRent: 1170
     },
+
 
     computed: {
 
         /* =========================
-           买房基础数据
+           房屋基础数据
            ========================= */
 
         houseTotalPrice() {
+
             return Number(this.housePricePerSqm || 0) *
                    Number(this.houseArea || 0);
         },
 
+
         loanPrincipal() {
+
             return Math.max(
                 0,
-                this.houseTotalPrice - Number(this.downPayment || 0)
+                this.houseTotalPrice -
+                Number(this.downPayment || 0)
             );
         },
 
-        /* 月供 */
+
+        /* =========================
+           月供
+           ========================= */
+
         monthlyPayment() {
 
             const P = this.loanPrincipal;
-            const n = Number(this.loanYears || 0) * 12;
-            const i = Number(this.loanRate || 0) / 100 / 12;
+
+            const n =
+                Number(this.loanYears || 0) * 12;
+
+            const i =
+                Number(this.loanRate || 0) / 100 / 12;
 
             if (P <= 0 || n <= 0) {
                 return 0;
@@ -453,12 +630,11 @@ new Vue({
                 (Math.pow(1 + i, n) - 1);
         },
 
+
         /*
          * 累计偿还房贷
          *
-         * 注意：
-         * 这里必须使用贷款年限，
-         * 不能使用 compareYears。
+         * 使用贷款年限，而不是比较年限。
          */
         totalMortgagePaid() {
 
@@ -467,11 +643,16 @@ new Vue({
                    12;
         },
 
-        /* 物业费 */
+
+        /* =========================
+           物业费
+           ========================= */
+
         monthlyPropertyFee() {
 
             return Number(this.houseArea || 0) * 1.4;
         },
+
 
         totalPropertyFee() {
 
@@ -480,7 +661,11 @@ new Vue({
                    12;
         },
 
-        /* 契税 */
+
+        /* =========================
+           契税
+           ========================= */
+
         deedTax() {
 
             return this.houseTotalPrice * 0.01;
@@ -495,16 +680,29 @@ new Vue({
 
             let balance = this.loanPrincipal;
 
-            const totalMonths =
-                Math.min(
-                    Number(this.compareYears || 0) * 12,
+            const compareMonths =
+                Math.max(
+                    0,
+                    Number(this.compareYears || 0) * 12
+                );
+
+            const loanMonths =
+                Math.max(
+                    0,
                     Number(this.loanYears || 0) * 12
                 );
+
+            const totalMonths =
+                Math.min(compareMonths, loanMonths);
 
             const monthlyRate =
                 Number(this.loanRate || 0) / 100 / 12;
 
-            for (let month = 1; month <= totalMonths; month++) {
+            for (
+                let month = 1;
+                month <= totalMonths;
+                month++
+            ) {
 
                 if (balance <= 0) {
                     balance = 0;
@@ -517,9 +715,8 @@ new Vue({
                 let principalPaid =
                     this.monthlyPayment - interest;
 
-                if (principalPaid < 0) {
-                    principalPaid = 0;
-                }
+                principalPaid =
+                    Math.max(0, principalPaid);
 
                 principalPaid =
                     Math.min(principalPaid, balance);
@@ -532,7 +729,7 @@ new Vue({
 
 
         /* =========================
-           买房剩余现金
+           买房现金计算
            ========================= */
 
         buyCashCalculation() {
@@ -540,57 +737,94 @@ new Vue({
             let balance =
                 Number(this.currentPrincipal || 0);
 
+
             let totalInterest = 0;
 
+
             /*
-             * 买房初始一次性支出：
+             * 买房最初一次性支出：
              *
              * 首付
              * + 契税
              * + 装修
              */
-            balance -= Number(this.downPayment || 0);
+            balance -=
+                Number(this.downPayment || 0);
+
             balance -= this.deedTax;
-            balance -= Number(this.decorationCost || 0);
+
+            balance -=
+                Number(this.decorationCost || 0);
+
 
             const totalMonths =
-                Number(this.compareYears || 0) * 12;
+                Math.max(
+                    0,
+                    Number(this.compareYears || 0) * 12
+                );
+
 
             const loanMonths =
-                Number(this.loanYears || 0) * 12;
+                Math.max(
+                    0,
+                    Number(this.loanYears || 0) * 12
+                );
+
 
             const depositMonthlyRate =
-                Number(this.depositRate || 0) / 100 / 12;
+                Number(this.depositRate || 0) /
+                100 /
+                12;
 
-            for (let month = 1; month <= totalMonths; month++) {
+
+            /*
+             * 逐月计算
+             */
+            for (
+                let month = 1;
+                month <= totalMonths;
+                month++
+            ) {
 
                 /*
-                 * 第1个月不产生存款利息。
+                 * 第1个月：
+                 * 不产生存款利息。
                  *
-                 * 第2个月开始：
-                 * 上个月月底剩余的钱产生一个月利息。
+                 * 从第2个月开始：
+                 * 使用上个月月底剩余现金计息。
                  */
-                if (month > 1 && balance > 0) {
+                if (
+                    month > 1 &&
+                    balance > 0 &&
+                    depositMonthlyRate > 0
+                ) {
 
                     const interest =
                         balance * depositMonthlyRate;
 
                     balance += interest;
+
                     totalInterest += interest;
                 }
 
+
                 /*
-                 * 贷款期内支付月供
+                 * 贷款期间支付月供
                  */
                 if (month <= loanMonths) {
-                    balance -= this.monthlyPayment;
+
+                    balance -=
+                        this.monthlyPayment;
                 }
+
 
                 /*
                  * 每月物业费
                  */
-                balance -= this.monthlyPropertyFee;
+                balance -=
+                    this.monthlyPropertyFee;
             }
+
 
             return {
                 balance: balance,
@@ -599,11 +833,21 @@ new Vue({
         },
 
 
+        /*
+         * 20年后剩余现金
+         *
+         * 注意：
+         * 这里已经包含20年的存款利息。
+         */
         buyRemainingAsset() {
 
             return this.buyCashCalculation.balance;
         },
 
+
+        /*
+         * 单独显示累计存款利息
+         */
         buyDepositInterest() {
 
             return this.buyCashCalculation.interest;
@@ -616,6 +860,10 @@ new Vue({
          * = 剩余现金
          * + 房屋价值
          * - 剩余贷款
+         *
+         * 注意：
+         * buyRemainingAsset 已经包含存款利息，
+         * 因此这里不能再次加 buyDepositInterest。
          */
         buyTotalAsset() {
 
@@ -642,34 +890,55 @@ new Vue({
             let balance =
                 Number(this.currentPrincipal || 0);
 
+
             let totalInterest = 0;
 
+
             const totalMonths =
-                Number(this.compareYears || 0) * 12;
+                Math.max(
+                    0,
+                    Number(this.compareYears || 0) * 12
+                );
+
 
             const depositMonthlyRate =
-                Number(this.depositRate || 0) / 100 / 12;
+                Number(this.depositRate || 0) /
+                100 /
+                12;
 
-            for (let month = 1; month <= totalMonths; month++) {
+
+            for (
+                let month = 1;
+                month <= totalMonths;
+                month++
+            ) {
 
                 /*
-                 * 第1个月不产生利息。
-                 * 从第2个月开始按照上个月月底余额计息。
+                 * 第1个月不计利息，
+                 * 第2个月开始按照上月底余额计息。
                  */
-                if (month > 1 && balance > 0) {
+                if (
+                    month > 1 &&
+                    balance > 0 &&
+                    depositMonthlyRate > 0
+                ) {
 
                     const interest =
                         balance * depositMonthlyRate;
 
                     balance += interest;
+
                     totalInterest += interest;
                 }
+
 
                 /*
                  * 支付当月租金
                  */
-                balance -= Number(this.monthlyRent || 0);
+                balance -=
+                    Number(this.monthlyRent || 0);
             }
+
 
             return {
                 balance: balance,
@@ -683,6 +952,7 @@ new Vue({
             return this.rentCalculation.balance;
         },
 
+
         rentDepositInterest() {
 
             return this.rentCalculation.interest;
@@ -695,7 +965,8 @@ new Vue({
 
         formatMoney(value) {
 
-            const num = Number(value || 0);
+            const num =
+                Number(value || 0);
 
             return num.toLocaleString('zh-CN', {
                 minimumFractionDigits: 2,
