@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>买房 vs 租房资产对比计算器</title>
+
+<script src="//cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
+<style>
+body {
+    padding: 20px;
+    background: #ffffff;
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.result {
+    background: #f8f9fa;
+    padding: 12px;
+    border-radius: 6px;
+}
+
+.result p {
+    margin-bottom: 10px;
+}
+
+.result p:last-child {
+    margin-bottom: 0;
+}
+
+.highlight {
+    font-size: 18px;
+    font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div id="app" class="container">
+
+<div class="row">
+
+<!-- ==================== 左侧：买房 ==================== -->
+<div class="col-md-6">
+<div class="card p-3">
+
+<h5>🏠 买房资产计算器</h5>
+
+<div class="form-group">
+<label>当前本金（元）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="principal">
+</div>
+
+<div class="form-group">
+<label>房屋单价（元/㎡）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="housePricePerSqm">
+</div>
+
+<div class="form-group">
+<label>房屋面积（㎡）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="houseArea"
+    step="0.1">
+</div>
+
+<div class="form-group">
+<label>首付金额（元）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="downPayment">
+</div>
+
+<div class="form-group">
+<label>贷款利率（年）(%)</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="loanRate"
+    step="0.01">
+</div>
+
+<div class="form-group">
+<label>贷款年限（年）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="loanYears">
+</div>
+
+<div class="form-group">
+<label>多少年后</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="compareYears"
+    step="1">
+</div>
+
+
+<!-- 买房计算结果 -->
+<div class="result mt-3">
+
+<p>
+🏡 房屋总价：
+<b>{{ formatMoney(houseTotalPrice) }}</b> 元
+</p>
+
+<p>
+💳 贷款本金：
+<b>{{ formatMoney(loanPrincipal) }}</b> 元
+</p>
+
+<p>
+📌 每月还款金额：
+<b>{{ formatMoney(monthlyPayment) }}</b> 元
+</p>
+
+<p>
+🏦 {{ compareYears }}年内累计偿还房贷：
+<b>{{ formatMoney(totalMortgagePaid) }}</b> 元
+</p>
+
+<p>
+🏢 物业费：
+<b>{{ formatMoney(monthlyPropertyFee) }}</b> 元/月
+</p>
+
+<p>
+🏢 {{ compareYears }}年累计物业费：
+<b>{{ formatMoney(totalPropertyFee) }}</b> 元
+</p>
+
+<p>
+📄 契税（房屋总价1%）：
+<b>{{ formatMoney(deedTax) }}</b> 元
+</p>
+
+<hr>
+
+<p class="highlight">
+💰 {{ compareYears }}年之后，剩余现金资产：
+<b>{{ formatMoney(buyRemainingAsset) }}</b> 元
+</p>
+
+<p class="highlight">
+🏠 {{ compareYears }}年之后，房屋总金额：
+<b>{{ formatMoney(houseTotalPrice) }}</b> 元
+</p>
+
+<p>
+📊 现金资产 + 房屋价值：
+<b>{{ formatMoney(buyTotalAsset) }}</b> 元
+</p>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ==================== 右侧：租房 ==================== -->
+<div class="col-md-6">
+<div class="card p-3">
+
+<h5>🏢 租房资产计算器</h5>
+
+<div class="form-group">
+<label>当前本金（与买房联动）</label>
+<input
+    type="number"
+    class="form-control"
+    :value="principal"
+    disabled>
+</div>
+
+<div class="form-group">
+<label>每月房租（元）</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="monthlyRent">
+</div>
+
+<div class="form-group">
+<label>多少年后</label>
+<input
+    type="number"
+    class="form-control"
+    v-model.number="rentYears">
+</div>
+
+
+<!-- 租房计算结果 -->
+<div class="result mt-3">
+
+<p>
+🏢 每月房租：
+<b>{{ formatMoney(monthlyRent) }}</b> 元
+</p>
+
+<p>
+📉 {{ rentYears }}年累计房租：
+<b>{{ formatMoney(totalRent) }}</b> 元
+</p>
+
+<hr>
+
+<p class="highlight">
+💰 {{ rentYears }}年之后，剩余资产：
+<b>{{ formatMoney(rentRemainingAsset) }}</b> 元
+</p>
+
+</div>
+
+</div>
+</div>
+
+</div>
+
+
+<!-- ==================== 最下面：对比 ==================== -->
+
+<div class="card p-3 mt-4">
+
+<h5>📊 买房 vs 租房资产对比</h5>
+
+<div class="result mt-2">
+
+<p>
+🏠 买房：
+<b>{{ formatMoney(buyTotalAsset) }}</b> 元
+</p>
+
+<p>
+🏢 租房：
+<b>{{ formatMoney(rentRemainingAsset) }}</b> 元
+</p>
+
+<hr>
+
+<p class="highlight" v-if="assetDifference > 0">
+📈 买房方案资产比租房多：
+<b>{{ formatMoney(assetDifference) }}</b> 元
+</p>
+
+<p class="highlight" v-else-if="assetDifference < 0">
+📈 租房方案资产比买房多：
+<b>{{ formatMoney(Math.abs(assetDifference)) }}</b> 元
+</p>
+
+<p class="highlight" v-else>
+两种方案资产相同
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+new Vue({
+
+el: '#app',
+
+data: {
+
+    // ===== 公共本金 =====
+    principal: 325000,
+
+    // ===== 买房 =====
+    housePricePerSqm: 10000,
+    houseArea: 100,
+
+    downPayment: 300000,
+
+    loanRate: 2.6,
+    loanYears: 30,
+
+    compareYears: 10,
+
+    // ===== 租房 =====
+    monthlyRent: 2000,
+    rentYears: 10,
+
+    // 物业费：1.4元/㎡/月
+    propertyFeePerSqm: 1.4,
+
+    // 契税比例：1%
+    deedTaxRate: 0.01
+},
+
+
+computed: {
+
+    // ===================================
+    // 房屋总价
+    // ===================================
+    houseTotalPrice() {
+
+        return Math.max(
+            0,
+            Number(this.housePricePerSqm || 0) *
+            Number(this.houseArea || 0)
+        );
+
+    },
+
+
+    // ===================================
+    // 实际贷款金额
+    // 房屋总价 - 首付
+    // ===================================
+    loanPrincipal() {
+
+        return Math.max(
+            0,
+            this.houseTotalPrice -
+            Number(this.downPayment || 0)
+        );
+
+    },
+
+
+    // ===================================
+    // 等额本息月供
+    // ===================================
+    monthlyPayment() {
+
+        const P = this.loanPrincipal;
+
+        const n =
+            Number(this.loanYears || 0) * 12;
+
+        const i =
+            Number(this.loanRate || 0) /
+            100 /
+            12;
+
+
+        if (P <= 0 || n <= 0) {
+
+            return 0;
+
+        }
+
+
+        // 0利率情况
+        if (i === 0) {
+
+            return P / n;
+
+        }
+
+
+        return P *
+            (
+                i *
+                Math.pow(1 + i, n)
+            )
+            /
+            (
+                Math.pow(1 + i, n) - 1
+            );
+
+    },
+
+
+    // ===================================
+    // 实际计算多少个月房贷
+    //
+    // 如果：
+    // 对比10年
+    // 贷款30年
+    //
+    // 则计算120个月
+    //
+    // 如果：
+    // 对比30年
+    // 贷款20年
+    //
+    // 则只计算240个月
+    // ===================================
+    paidMortgageMonths() {
+
+        const compareMonths =
+            Number(this.compareYears || 0) * 12;
+
+        const loanMonths =
+            Number(this.loanYears || 0) * 12;
+
+
+        return Math.min(
+            compareMonths,
+            loanMonths
+        );
+
+    },
+
+
+    // ===================================
+    // 多少年内累计房贷支出
+    // ===================================
+    totalMortgagePaid() {
+
+        return this.monthlyPayment *
+               this.paidMortgageMonths;
+
+    },
+
+
+    // ===================================
+    // 每月物业费
+    // ===================================
+    monthlyPropertyFee() {
+
+        return Number(this.houseArea || 0) *
+               Number(this.propertyFeePerSqm || 0);
+
+    },
+
+
+    // ===================================
+    // 累计物业费
+    // ===================================
+    totalPropertyFee() {
+
+        return this.monthlyPropertyFee *
+               Number(this.compareYears || 0) *
+               12;
+
+    },
+
+
+    // ===================================
+    // 契税
+    // 房屋总价 × 1%
+    // ===================================
+    deedTax() {
+
+        return this.houseTotalPrice *
+               this.deedTaxRate;
+
+    },
+
+
+    // ===================================
+    // 买房后的剩余现金资产
+    //
+    // 当前本金
+    // - 首付
+    // - 累计房贷
+    // - 累计物业费
+    // - 契税
+    // ===================================
+    buyRemainingAsset() {
+
+        return Number(this.principal || 0)
+
+            - Number(this.downPayment || 0)
+
+            - this.totalMortgagePaid
+
+            - this.totalPropertyFee
+
+            - this.deedTax;
+
+    },
+
+
+    // ===================================
+    // 买房最终总资产
+    //
+    // 剩余现金
+    // +
+    // 房屋价值
+    // ===================================
+    buyTotalAsset() {
+
+        return this.buyRemainingAsset +
+               this.houseTotalPrice;
+
+    },
+
+
+    // ===================================
+    // 租房累计租金
+    // ===================================
+    totalRent() {
+
+        return Number(this.monthlyRent || 0) *
+               Number(this.rentYears || 0) *
+               12;
+
+    },
+
+
+    // ===================================
+    // 租房剩余资产
+    //
+    // 当前本金 - 总房租
+    // ===================================
+    rentRemainingAsset() {
+
+        return Number(this.principal || 0)
+               - this.totalRent;
+
+    },
+
+
+    // ===================================
+    // 买房与租房的最终资产差
+    // ===================================
+    assetDifference() {
+
+        return this.buyTotalAsset -
+               this.rentRemainingAsset;
+
+    }
+
+},
+
+
+methods: {
+
+    // 金额格式
+    formatMoney(value) {
+
+        const number =
+            Number(value) || 0;
+
+        return number.toLocaleString(
+            'zh-CN',
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
+
+    }
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
