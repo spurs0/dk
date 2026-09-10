@@ -4,15 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>买房 vs 租房资产对比1.5</title>
+    <title>买房 vs 租房资产对比1.6</title>
 
     <!-- Bootstrap 4.5.2 -->
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
-
-    <!-- Font Awesome 图标 -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- Vue 2.6.14 -->
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
@@ -41,17 +37,15 @@
             border-radius: 12px 12px 0 0 !important;
         }
 
-        .card-header i {
-            margin-right: 8px;
-        }
-
         .form-group label {
             font-weight: 500;
         }
 
-        .form-group label i {
-            width: 20px;
+        .icon {
+            display: inline-block;
+            width: 24px;
             margin-right: 4px;
+            font-size: 18px;
         }
 
         .result-box {
@@ -93,10 +87,6 @@
             text-align: center;
         }
 
-        .compare-box h4 i {
-            margin-right: 6px;
-        }
-
         .compare-value {
             font-size: 26px;
             font-weight: bold;
@@ -107,10 +97,14 @@
             background-color: #f8f9fa !important;
         }
 
-        .small-note {
-            color: #888;
-            font-size: 12px;
-            margin-top: 4px;
+        .warning-text {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .normal-text {
+            color: #28a745;
+            font-weight: 500;
         }
     </style>
 </head>
@@ -120,8 +114,7 @@
 <div id="app" class="container py-4">
 
     <h2 class="text-center mb-4">
-        <i class="fas fa-home"></i>
-        买房 vs 租房资产对比
+        🏠 买房 vs 租房资产对比
     </h2>
 
     <div class="row">
@@ -134,16 +127,15 @@
             <div class="card h-100">
 
                 <div class="card-header">
-                    <i class="fas fa-home"></i>
-                    买房
+                    🏠 买房
                 </div>
 
                 <div class="card-body">
 
-                    <!-- 当前本金：联动参数 -->
+                    <!-- 当前本金：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-wallet"></i>
+                            <span class="icon">💰</span>
                             当前本金
                         </label>
 
@@ -153,10 +145,10 @@
                     </div>
 
 
-                    <!-- 存款利率：联动参数 -->
+                    <!-- 存款利率：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-percentage"></i>
+                            <span class="icon">📈</span>
                             存款利率（年）(%)
                         </label>
 
@@ -170,7 +162,7 @@
                     <!-- 房屋单价 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-tag"></i>
+                            <span class="icon">🏷️</span>
                             房屋单价（元/㎡）
                         </label>
 
@@ -183,7 +175,7 @@
                     <!-- 房屋面积 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-ruler-combined"></i>
+                            <span class="icon">📐</span>
                             房屋面积（㎡）
                         </label>
 
@@ -196,7 +188,7 @@
                     <!-- 房屋总价 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-calculator"></i>
+                            <span class="icon">🧮</span>
                             房屋总价
                         </label>
 
@@ -210,7 +202,7 @@
                     <!-- 首付 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-money-bill-wave"></i>
+                            <span class="icon">💵</span>
                             首付金额
                         </label>
 
@@ -220,10 +212,10 @@
                     </div>
 
 
-                    <!-- 装修：紧跟首付 -->
+                    <!-- 装修 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-paint-roller"></i>
+                            <span class="icon">🎨</span>
                             装修花费
                         </label>
 
@@ -236,7 +228,7 @@
                     <!-- 贷款利率 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-percent"></i>
+                            <span class="icon">🏦</span>
                             贷款利率（年）(%)
                         </label>
 
@@ -250,7 +242,7 @@
                     <!-- 贷款年限 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-calendar-alt"></i>
+                            <span class="icon">📅</span>
                             贷款年限
                         </label>
 
@@ -260,10 +252,10 @@
                     </div>
 
 
-                    <!-- 比较年限：联动 -->
+                    <!-- 多少年后：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-hourglass-half"></i>
+                            <span class="icon">⏳</span>
                             多少年后（剩余资产）
                         </label>
 
@@ -277,7 +269,7 @@
                     <div class="result-box">
 
                         <div class="result-item">
-                            <span>月供</span>
+                            <span>💳 月供</span>
                             <span class="result-value">
                                 {{ formatMoney(monthlyPayment) }}
                             </span>
@@ -285,7 +277,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ loanYears }}年内累计偿还房贷
+                                🧾 {{ loanYears }}年内累计偿还房贷
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(totalMortgagePaid) }}
@@ -293,7 +285,7 @@
                         </div>
 
                         <div class="result-item">
-                            <span>每月物业费</span>
+                            <span>🏢 每月物业费</span>
                             <span class="result-value">
                                 {{ formatMoney(monthlyPropertyFee) }}
                             </span>
@@ -301,7 +293,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年物业费
+                                🏢 {{ compareYears }}年物业费
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(totalPropertyFee) }}
@@ -309,14 +301,14 @@
                         </div>
 
                         <div class="result-item">
-                            <span>契税</span>
+                            <span>🧾 契税</span>
                             <span class="result-value">
                                 {{ formatMoney(deedTax) }}
                             </span>
                         </div>
 
                         <div class="result-item">
-                            <span>装修花费</span>
+                            <span>🎨 装修花费</span>
                             <span class="result-value">
                                 {{ formatMoney(decorationCost) }}
                             </span>
@@ -324,7 +316,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年存款利息
+                                💰 {{ compareYears }}年存款利息
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(buyDepositInterest) }}
@@ -333,16 +325,29 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年后剩余现金
+                                💵 {{ compareYears }}年后剩余现金
                             </span>
-                            <span class="result-value">
+                            <span class="result-value"
+                                  :class="{ 'warning-text': buyRemainingAsset < 0 }">
                                 {{ formatMoney(buyRemainingAsset) }}
                             </span>
                         </div>
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年之后，剩余贷款
+                                ⚠️ 现金转负
+                            </span>
+                            <span class="result-value"
+                                  :class="cashTurnNegativeMonth > 0
+                                      ? 'warning-text'
+                                      : 'normal-text'">
+                                {{ cashTurnNegativeText }}
+                            </span>
+                        </div>
+
+                        <div class="result-item">
+                            <span>
+                                🏦 {{ compareYears }}年之后，剩余贷款
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(remainingLoan) }}
@@ -351,7 +356,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年之后，房屋总金额（假设房价不变）
+                                🏠 {{ compareYears }}年之后，房屋总金额（假设房价不变）
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(houseTotalPrice) }}
@@ -360,9 +365,10 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年之后，买房净资产
+                                💎 {{ compareYears }}年之后，买房净资产
                             </span>
-                            <span class="result-value total-asset">
+                            <span class="result-value total-asset"
+                                  :class="{ 'warning-text': buyTotalAsset < 0 }">
                                 {{ formatMoney(buyTotalAsset) }}
                             </span>
                         </div>
@@ -383,8 +389,7 @@
             <div class="card h-100">
 
                 <div class="card-header">
-                    <i class="fas fa-key"></i>
-                    租房
+                    🔑 租房
                 </div>
 
                 <div class="card-body">
@@ -392,7 +397,7 @@
                     <!-- 当前本金：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-wallet"></i>
+                            <span class="icon">💰</span>
                             当前本金
                         </label>
 
@@ -406,7 +411,7 @@
                     <!-- 存款利率：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-percentage"></i>
+                            <span class="icon">📈</span>
                             存款利率（年）(%)
                         </label>
 
@@ -420,7 +425,7 @@
                     <!-- 每月租金 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-building"></i>
+                            <span class="icon">🏢</span>
                             每月租金
                         </label>
 
@@ -430,10 +435,10 @@
                     </div>
 
 
-                    <!-- 比较年限：联动 -->
+                    <!-- 多少年后：联动 -->
                     <div class="form-group">
                         <label>
-                            <i class="fas fa-hourglass-half"></i>
+                            <span class="icon">⏳</span>
                             多少年后（剩余资产）
                         </label>
 
@@ -449,7 +454,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年累计租金
+                                🏠 {{ compareYears }}年累计租金
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(totalRent) }}
@@ -458,7 +463,7 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年存款利息
+                                💰 {{ compareYears }}年存款利息
                             </span>
                             <span class="result-value">
                                 {{ formatMoney(rentDepositInterest) }}
@@ -467,9 +472,10 @@
 
                         <div class="result-item">
                             <span>
-                                {{ compareYears }}年后剩余资产
+                                💵 {{ compareYears }}年后剩余资产
                             </span>
-                            <span class="result-value total-asset">
+                            <span class="result-value total-asset"
+                                  :class="{ 'warning-text': rentRemainingAsset < 0 }">
                                 {{ formatMoney(rentRemainingAsset) }}
                             </span>
                         </div>
@@ -490,21 +496,20 @@
     <div class="compare-box">
 
         <h4>
-            <i class="fas fa-balance-scale"></i>
-            {{ compareYears }}年后资产对比
+            ⚖️ {{ compareYears }}年后资产对比
         </h4>
 
         <div class="mt-3">
 
             <div>
-                买房净资产：
+                🏠 买房净资产：
                 <strong>
                     {{ formatMoney(buyTotalAsset) }}
                 </strong>
             </div>
 
             <div class="mt-2">
-                租房剩余资产：
+                🔑 租房剩余资产：
                 <strong>
                     {{ formatMoney(rentRemainingAsset) }}
                 </strong>
@@ -513,21 +518,23 @@
         </div>
 
         <div class="compare-value">
-            <i class="fas"
-               :class="buyTotalAsset >= rentRemainingAsset
-                       ? 'fa-home'
-                       : 'fa-key'">
-            </i>
 
-            {{ buyTotalAsset >= rentRemainingAsset
-               ? '买房更高'
-               : '租房更高' }}
+            <span v-if="buyTotalAsset >= rentRemainingAsset">
+                🏠 买房更高
+            </span>
+
+            <span v-else>
+                🔑 租房更高
+            </span>
+
         </div>
 
         <div class="mt-2">
             相差：
             <strong>
-                {{ formatMoney(Math.abs(buyTotalAsset - rentRemainingAsset)) }}
+                {{ formatMoney(Math.abs(
+                    buyTotalAsset - rentRemainingAsset
+                )) }}
             </strong>
         </div>
 
@@ -583,7 +590,7 @@ new Vue({
     computed: {
 
         /* =========================
-           房屋基础数据
+           房屋总价
            ========================= */
 
         houseTotalPrice() {
@@ -592,6 +599,10 @@ new Vue({
                    Number(this.houseArea || 0);
         },
 
+
+        /* =========================
+           贷款本金
+           ========================= */
 
         loanPrincipal() {
 
@@ -631,11 +642,10 @@ new Vue({
         },
 
 
-        /*
-         * 累计偿还房贷
-         *
-         * 使用贷款年限，而不是比较年限。
-         */
+        /* =========================
+           贷款总还款
+           ========================= */
+
         totalMortgagePaid() {
 
             return this.monthlyPayment *
@@ -678,7 +688,8 @@ new Vue({
 
         remainingLoan() {
 
-            let balance = this.loanPrincipal;
+            let balance =
+                this.loanPrincipal;
 
             const compareMonths =
                 Math.max(
@@ -693,10 +704,16 @@ new Vue({
                 );
 
             const totalMonths =
-                Math.min(compareMonths, loanMonths);
+                Math.min(
+                    compareMonths,
+                    loanMonths
+                );
 
             const monthlyRate =
-                Number(this.loanRate || 0) / 100 / 12;
+                Number(this.loanRate || 0) /
+                100 /
+                12;
+
 
             for (
                 let month = 1;
@@ -713,13 +730,17 @@ new Vue({
                     balance * monthlyRate;
 
                 let principalPaid =
-                    this.monthlyPayment - interest;
+                    this.monthlyPayment -
+                    interest;
 
                 principalPaid =
                     Math.max(0, principalPaid);
 
                 principalPaid =
-                    Math.min(principalPaid, balance);
+                    Math.min(
+                        principalPaid,
+                        balance
+                    );
 
                 balance -= principalPaid;
             }
@@ -729,7 +750,7 @@ new Vue({
 
 
         /* =========================
-           买房现金计算
+           买房现金逐月计算
            ========================= */
 
         buyCashCalculation() {
@@ -742,7 +763,7 @@ new Vue({
 
 
             /*
-             * 买房最初一次性支出：
+             * 买房初始一次性支出：
              *
              * 首付
              * + 契税
@@ -751,7 +772,8 @@ new Vue({
             balance -=
                 Number(this.downPayment || 0);
 
-            balance -= this.deedTax;
+            balance -=
+                this.deedTax;
 
             balance -=
                 Number(this.decorationCost || 0);
@@ -777,9 +799,9 @@ new Vue({
                 12;
 
 
-            /*
-             * 逐月计算
-             */
+            let negativeMonth = 0;
+
+
             for (
                 let month = 1;
                 month <= totalMonths;
@@ -787,11 +809,12 @@ new Vue({
             ) {
 
                 /*
-                 * 第1个月：
-                 * 不产生存款利息。
+                 * 只有余额为正时才产生存款利息。
                  *
-                 * 从第2个月开始：
-                 * 使用上个月月底剩余现金计息。
+                 * 第1个月不计息。
+                 *
+                 * 第2个月开始，
+                 * 按上个月月底余额计算。
                  */
                 if (
                     month > 1 &&
@@ -800,7 +823,8 @@ new Vue({
                 ) {
 
                     const interest =
-                        balance * depositMonthlyRate;
+                        balance *
+                        depositMonthlyRate;
 
                     balance += interest;
 
@@ -809,7 +833,7 @@ new Vue({
 
 
                 /*
-                 * 贷款期间支付月供
+                 * 贷款期内支付月供
                  */
                 if (month <= loanMonths) {
 
@@ -823,47 +847,111 @@ new Vue({
                  */
                 balance -=
                     this.monthlyPropertyFee;
+
+
+                /*
+                 * 第一次出现负数
+                 */
+                if (
+                    balance < 0 &&
+                    negativeMonth === 0
+                ) {
+
+                    negativeMonth = month;
+                }
             }
 
 
             return {
                 balance: balance,
-                interest: totalInterest
+                interest: totalInterest,
+                negativeMonth: negativeMonth
             };
         },
 
 
-        /*
-         * 20年后剩余现金
-         *
-         * 注意：
-         * 这里已经包含20年的存款利息。
-         */
+        /* =========================
+           买房剩余现金
+           ========================= */
+
         buyRemainingAsset() {
 
             return this.buyCashCalculation.balance;
         },
 
 
-        /*
-         * 单独显示累计存款利息
-         */
+        /* =========================
+           买房存款利息
+           ========================= */
+
         buyDepositInterest() {
 
             return this.buyCashCalculation.interest;
         },
 
 
+        /* =========================
+           现金转负月份
+           ========================= */
+
+        cashTurnNegativeMonth() {
+
+            return this.buyCashCalculation.negativeMonth;
+        },
+
+
+        /* =========================
+           现金转负提示文字
+           ========================= */
+
+        cashTurnNegativeText() {
+
+            const month =
+                this.cashTurnNegativeMonth;
+
+            if (month === 0) {
+
+                return '在比较期限内未转负';
+            }
+
+            const year =
+                Math.floor((month - 1) / 12);
+
+            const monthInYear =
+                ((month - 1) % 12) + 1;
+
+            if (monthInYear === 12) {
+
+                return '第 ' +
+                       (year + 1) +
+                       ' 年末';
+            }
+
+            return '第 ' +
+                   year +
+                   ' 年第 ' +
+                   monthInYear +
+                   ' 个月';
+        },
+
+
+        /* =========================
+           买房净资产
+           ========================= */
+
         /*
-         * 买房净资产
-         *
-         * = 剩余现金
-         * + 房屋价值
-         * - 剩余贷款
-         *
          * 注意：
-         * buyRemainingAsset 已经包含存款利息，
-         * 因此这里不能再次加 buyDepositInterest。
+         *
+         * buyRemainingAsset 已经包含：
+         * 初始现金
+         * + 存款利息
+         * - 首付
+         * - 契税
+         * - 装修
+         * - 月供
+         * - 物业费
+         *
+         * 所以这里不能再次加存款利息。
          */
         buyTotalAsset() {
 
@@ -874,7 +962,7 @@ new Vue({
 
 
         /* =========================
-           租房
+           租房累计租金
            ========================= */
 
         totalRent() {
@@ -884,6 +972,10 @@ new Vue({
                    12;
         },
 
+
+        /* =========================
+           租房现金逐月计算
+           ========================= */
 
         rentCalculation() {
 
@@ -914,8 +1006,13 @@ new Vue({
             ) {
 
                 /*
-                 * 第1个月不计利息，
-                 * 第2个月开始按照上月底余额计息。
+                 * 第1个月不计利息。
+                 *
+                 * 从第2个月开始：
+                 * 按上个月月底剩余现金计息。
+                 *
+                 * 如果现金已经变成负数，
+                 * 后面不再产生利息。
                  */
                 if (
                     month > 1 &&
@@ -924,7 +1021,8 @@ new Vue({
                 ) {
 
                     const interest =
-                        balance * depositMonthlyRate;
+                        balance *
+                        depositMonthlyRate;
 
                     balance += interest;
 
@@ -947,11 +1045,19 @@ new Vue({
         },
 
 
+        /* =========================
+           租房剩余资产
+           ========================= */
+
         rentRemainingAsset() {
 
             return this.rentCalculation.balance;
         },
 
+
+        /* =========================
+           租房存款利息
+           ========================= */
 
         rentDepositInterest() {
 
